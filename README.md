@@ -1,4 +1,4 @@
-Data Privacy in Machine Learning
+# Data Privacy in Machine Learning
 
 This repo contains code, simulation, and analysis from CS 591S1: Data Privacy in Machine Learning.
 
