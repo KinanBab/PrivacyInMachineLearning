@@ -29,7 +29,7 @@ def Mechanism(n, m, sigma):
 # The Hadamard attack:
 # Compute z = Ha and round each entry z_i to nearest 0 or 1 to estimate original x
 def Attack(a):
-  n = len(a)
+  n = a.shape[0]
   H = scipy.linalg.hadamard(n)
   z = H.dot(a)
   return [ MyRound(x) for x in z ]
