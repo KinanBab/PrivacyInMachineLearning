@@ -152,7 +152,11 @@ def MyDataPlot(data, labelsPerLevel, order=None, show=True, ctx=None):
 
 
   for labels, data in results:
-    label = ','.join([ str(labelsPerLevel[i])+'='+str(labels[i]) for i in range(len(labels)) ])
+    lenDiff = len(labels) - (len(labelsPerLevel) - 2)
+    concat = lambda i: str(labelsPerLevel[i - lenDiff])+'='+str(labels[i])
+    concatIfLabel = lambda i: concat(i) if i >= lenDiff else labels[i]
+
+    label = ','.join([ concatIfLabel(i) for i in range(len(labels)) ])
     color = newColor()
 
     Xs = sorted(list(data.keys()))
