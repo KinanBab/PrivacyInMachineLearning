@@ -1,0 +1,41 @@
+\subsection{Reconstruction Difficult When Answers Based on a Sample}
+Now we consider input data $x = x(1), ..., x(n)$ each bit. \\
+
+\noindent We have a mechanism that chooses sample $y = y_1, ..., y_k$ where $k = \frac{n}{3}$ without replacement, and uses sample to answer query $f$ producing output $z = f(y)$. \\
+
+\noindent An attacker sees the result of the queries and feeds it to a reconstruction algorithm $A$ of her choosing to produce $\hat{x} = A(z) = A(f(y))$. \\
+
+\noindent \textit{note: this is reasonable since we have shown that answering queries (averages of binary functions) about dataset is well approximated by answering these queries on random samples. We did that assuming replacement, while here there is no replacement, although it probably does not change the bounds by much.\\}
+
+\noindent We define the error as 
+$$E = \frac{\textit{Hamming}(\hat{x}, x)}{n}$$
+
+\noindent We want to show:
+$$ Pr[ E \geq \frac{1}{4} ] \geq 1 - \exp(\Omega(n)) $$
+
+\noindent Alternatively, that is equivalent to:
+$$ Pr[ E < \frac{1}{4} ] \leq \exp(\Omega(n)) \quad \quad(1) $$
+
+\noindent $\forall i \in \{1, ..., n \}$ define $I_i = x(i) \oplus \hat{x}(i)$  where $\oplus$ stands for XOR. \\
+In other words, $I_i$ is $1$ if the attacker guess $x(i)$ incorrectly, and $0$ otherwise. \\
+Let $I = I_1 + ... + I_n$. \\
+Note that $E = \frac{1}{n} \times I$ \\
+
+\noindent All that all entries of $x$ are chosen uniformly and independently, which means that for any two distinct entries of $x$, these entries (and any function of one of them) are independent. In particular, for any $x(i)$ such that $x(i) \not\in y$, we have $\hat{x}(i) = g(y)$ and $x(i)$ independent, where $g = A \circ f$. \\
+
+\noindent Therefore, for all $x(i) \not\in y$, $x(i) \oplus \hat{x}(i)$ is uniform since $x(i)$ is uniform and independent, which implies that $E[I_i] = \frac{1}{2}$. For $x(j) \in y$, we cannot immediately say that XOR is uniform due to dependence. However, we know that $0 \geq E[I_j] \leq 1$. \\
+
+\noindent We know that $\mu_{I} = E[I] = E[ I_1 + ... + I_n ] \geq \frac{2n}{3}\frac{1}{2} + 0 = \frac{n}{3}$ \\
+
+\noindent Now we can go back to (1):
+$$ Pr[ E < \frac{1}{4} ] \leq Pr[ E \leq \frac{1}{4} ] = Pr[ nE \leq \frac{n}{4} ] = Pr[ I \leq \frac{n}{4} ] \quad \quad (2) $$
+
+\noindent Let $\epsilon = 1 - \frac{n}{4\mu_I}$ so that $(1 - \epsilon)\mu_I = \frac{n}{4}$. Plug $\epsilon$ into (2):
+$$\leq Pr[ I \leq \frac{n}{4} ] = Pr[ I < (1 - \epsilon)\mu_I ]$$
+$$\leq \exp(- \frac{\epsilon^2}{2} \mu_I) \quad\textit{By Chernoff Bound 2} $$
+$$ = \exp(- \frac{(1 - \frac{n}{4\mu_I})^2}{2}\mu_I)$$
+$$ = \exp(- (\frac{1}{2} - \frac{n}{4\mu_I} + \frac{n^2}{16\mu_{I}^2})\mu_I) $$
+$$ \leq \exp(- (\frac{1}{2} - \frac{3}{4} + \frac{9}{16})\frac{n}{3}) $$
+$$ = \exp(- \frac{5}{16}\frac{n}{3}) = \exp(- \frac{5}{48} n)$$
+
+\noindent Therefore, $$ Pr[ E \geq \frac{1}{4} ] \geq 1 - \exp(\Omega(n)) $$

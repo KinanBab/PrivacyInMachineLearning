@@ -1,0 +1,33 @@
+\subsection{Union Bound For Multiple Queries}
+The setting is the same as before, except that of estimating $\frac{1}{n}\sum^n_{i=1}x_i$, we are trying to estimate $\frac{1}{n}\sum^n_{i=1}f_j(x_i)$ for several functions $f_1, ..., f_d$. \\
+
+\noindent Let $X_j = \frac{1}{n}\sum^{n}_{i=1}f_j(x_i)$, and let $Y_j = \frac{1}{k}\sum^{k}_{i=1}f_j(s_i)$ \\
+
+Note the following:
+$$\mu_{Yj} = E[Y_j] = \frac{1}{k}\sum^{k}_{i=1}E[f_j(s_i)] = \frac{1}{k}\sum^{k}_{i=1}\frac{1}{n}\sum^{n}_{m=1}f_j(x_m)$$
+$$ = \frac{1}{n}\sum^{n}_{m=1}f_j(x_m) = X_j $$
+
+We want to find $k$ for which the following holds for any given $\alpha, \delta$:
+$$ \forall j: Pr[|Y_j - X_j| \geq \alpha ] < \delta $$
+
+This is implied by the following stronger statement:
+$$ Pr[ \bigcup_{j=1}^{d}(|Y_j - X_j| \geq \alpha ) ] < \delta $$
+
+By the union bound, we know:
+$$ Pr[ \bigcup_{j=1}^{d}(|Y_j - X_j| \geq \alpha ) ] \leq \sum_{j=1}^{d} Pr[|Y_j - X_j| \geq \alpha] $$
+$$ = \sum_{j=1}^{d} Pr[|k Y_j - k \mu_{Yj}| \geq \frac{\alpha}{\mu_{Yj}} k\mu_{Yj}] $$
+
+Now we can apply the chernoff bound, since $kY_j$ is the sum of $f_j(s_i)$ each in $\{0, 1\}$, and since $k\mu_{Yj}$ is the mean of $k Y_j$.
+
+$$ Pr[ \bigcup_{j=1}^{d}(|Y_j - X_j| \geq \alpha ) ] \leq \sum_{j=1}^{d} (2 \exp(- \frac{(\frac{\alpha}{\mu_{Yj}})^2}{2 + \frac{\alpha}{\mu_{Yj}}} k\mu{Yj}) )$$
+$$ \leq \sum_{j=1}^{d} 2 \exp(- \frac{\alpha^{2}k}{2\mu_{Yj}+\alpha})$$
+
+Now, what we want is to find $k$ such that:
+$$\sum_{j=1}^{d} 2 \exp(- \frac{\alpha^{2}k}{2\mu_{Yj}+\alpha}) \leq \delta$$
+$$\sum_{j=1}^{d} \exp(- \frac{\alpha^{2}k}{2\mu_{Yj}+\alpha}) \leq \frac{\delta}{2}$$
+Choose $j \in \{1, ..., d\}$ that minimizes $\exp(- \frac{\alpha^{2}k}{2\mu_{Yj}+\alpha})$, we get:
+$$ d \times \exp(- \frac{\alpha^{2}k}{2\mu_{Yj}+\alpha}) \leq \frac{\delta}{2} $$
+
+$$\frac{2d}{\delta} \leq \exp(\frac{\alpha^{2}k}{2\mu_{Yj}+\alpha}) \leq \exp(\alpha^2 k)$$
+$$ \alpha^2 k \geq \log(\frac{2d}{\delta}) $$
+$$ k \geq \frac{\log(d) + \log(2) - \log(\delta)}{\alpha^2}$$

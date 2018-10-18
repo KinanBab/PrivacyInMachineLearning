@@ -1,0 +1,51 @@
+\subsection{Lower bound on $k$ to guarantee small error}
+We want to find a bound on $k$, such that for all larger $k$ the following is true:
+$$ Pr[ error \leq \alpha ] \geq 1 - \delta $$
+
+\noindent Note that this is equivalent to:
+$$ Pr[ | \hat{a} - \bar{a}| > \alpha ] \leq \delta \quad \quad (1)$$
+
+\noindent Consider $\mu_{\hat{a}} = E[ \hat{a} ] = \frac{1}{k}(E[s_1] + ... + E[s_k])$ \\
+Since all of $s_1, ..., s_k$ have identitcal distribution, they all have the same expectation. \\
+Furthermore, since $\forall i \in \{1, ..., n\}: s_1 = a_i$ with probability $\frac{1}{n}$, then
+$$ E[s_1] =  \frac{1}{n}(a_1 + ... + a_n) = \bar{a}$$
+$$ \mu_{\hat{a}} = \bar{a} $$
+
+\noindent This means our desired inequality (1) became equivalent to:
+$$ Pr[ | \hat{a} - \mu_{\hat{a}}| > \alpha ] \leq \delta \quad \quad (2) $$
+
+\noindent To apply the Chernoff bound, we need a random variable that is the sum of random variables each in $[0,1]$. Therefore we will define $y_i$ and $y$ as follows:
+$$Y_i = \frac{s_i + 1}{2}$$
+$$Y = Y_1 + ... + Y_k$$
+
+\noindent Since $s_i \in [-1, 1]$, then $y_i \in [0, 1]$ for every $i$. \\
+
+\noindent Additionally $Y = \frac{1}{2}(s_1 + ... + s_k + k) = \frac{1}{2}(k\hat{a} + k)$\\
+\noindent and $\mu_Y = E[Y] = \frac{1}{2}(kE[\hat{a}] + k)$ \\
+
+\noindent Now, we will transform the inequality to be on $Y$:
+$$ | \hat{a} - \mu_{\hat{a}} | $$
+$$ = | \hat{a} + 1 - (\mu_{\hat{a}} + 1) $$
+$$ = | k\hat{a} + k - (k\mu_{\hat{a}} + k) | / k $$
+$$ = 2 | \frac{1}{2}k\hat{a} + k - \frac{1}{2}(k\mu_{\hat{a}} + k) | / k $$
+$$ = 2 | Y - \mu_Y| / k $$
+
+Therefore, (2) is equivalent to::
+$$ Pr[ | Y - \mu_Y| > \frac{k}{2} \frac{\alpha}{\mu_Y}\mu_Y ] \leq \delta$$
+
+Note that
+$$ Pr[ | Y - \mu_Y| > \frac{k}{2} \frac{\alpha}{\mu_Y}\mu_Y ] \leq Pr[ | Y - \mu_Y| \geq \frac{k}{2} \frac{\alpha}{\mu_Y}\mu_Y ] $$
+$$ \leq 2 \exp(- \frac{(\frac{k}{2} \frac{\alpha}{\mu_Y})^2}{2 + \frac{k}{2} \frac{\alpha}{\mu_Y}}\mu_Y) \quad \quad\textit{by chernoff}$$
+
+For a given $\alpha, \delta$, we want to find $k$ such that:
+
+$$ 2 \exp(- \frac{(\frac{k}{2} \frac{\alpha}{\mu_Y})^2}{2 + \frac{k}{2} \frac{\alpha}{\mu_Y}}\mu_Y) \leq \delta $$
+
+$$ \frac{(\frac{k}{2} \frac{\alpha}{\mu_Y})^2}{2 + \frac{k}{2} \frac{\alpha}{\mu_Y}}\mu_Y = \frac{k^2 \alpha^2}{8\mu_Y+2k\alpha} \leq k\alpha$$
+
+$$2 exp(- k\alpha) \leq 2 \exp(- \frac{(\frac{k}{2} \frac{\alpha}{\mu_Y})^2}{2 + \frac{k}{2} \frac{\alpha}{\mu_Y}}\mu_Y) \leq \delta$$
+$$2 exp(- k\alpha) \leq \delta $$
+$$ \exp(k\alpha) \geq \frac{2}{\delta} $$
+$$ k \geq \frac{1}{\alpha}\ log(\frac{2}{\delta}) = \frac{log(2) - log(\delta)}{\alpha}$$
+
+\noindent \textbf{Side note:} Alternatively, we could have computed $Var(\hat{x}) = \frac{1}{k^2}kVar(s_i) \leq \frac{1}{k}$, and then utilized Chebyshev's inequality to get $k \geq \alpha^2 \delta$.

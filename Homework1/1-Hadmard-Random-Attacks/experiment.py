@@ -15,11 +15,16 @@ ns = [ 128, 512, 2048, 8192 ]
 def ms(n, experiment):
   if experiment == 'hadamard':
     return [ n ]
-  return [ int(m * n) for m in [ 1.1, 4.0, 16.0 ] ]
+  if n < 2048:
+    return [ int(m * n) for m in [ 1.1, 4.0, 16.0 ] ]
+  elif n < 8192:
+    return [ int(m * n) for m in [ 1.1, 4.0 ] ]
+  else:
+    return [ int(m * n) for m in [ 1.1 ] ]
 
 def sigmas(n, experiment):
   max = int(math.log(math.sqrt(32*n), 2.0))
-  return [ 1.0/(2**p) for p in range(1, max + 1) ] # max is included
+  return [ 1.0/(2**p) for p in range(2, max + 1) ] # max is included
 
 
 # Runs the mechanism and attack then compares the result for
